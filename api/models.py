@@ -21,11 +21,13 @@ class FoodItem(models.Model):
     description = models.TextField()
     serve = models.TextField()
     image = models.ImageField(
-            upload_to='food_images/',
-            blank=True,
-            null=True,
-            validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])]
-        )
+        upload_to='food_images/',
+        blank=True,
+        null=True,
+        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])]
+    )
+    
+
     def __str__(self):
         return self.name
 
@@ -34,6 +36,20 @@ class Recipe(models.Model):
     recipes = models.TextField()
     instruction = models.TextField()
 
+    audio1 = models.FileField(
+        upload_to='food_audio1/',
+        blank=True,
+        null=True,
+        validators=[FileExtensionValidator(allowed_extensions=['mp3'])]
+        
+    )
+    audio2 = models.FileField(
+        upload_to='food_audio2/',
+        blank=True,
+        null=True,
+        validators=[FileExtensionValidator(allowed_extensions=['mp3'])]
+        
+    )
     def __str__(self):
         return f"{self.food_item.name}"
 
