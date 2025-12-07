@@ -7,7 +7,7 @@ from rest_framework import status, generics
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import FoodItem, Recipe, Profile, Favorites
-from .serializers import FoodItemSerializer, RecipeSerializer, ProfileSerializer, FavoriteSerializer
+from .serializers import FoodItemSerializer, RecipeSerializer, ProfileSerializer, FavoriteSerializer, FoodItemCreateWithRecipeSerializer
 from rest_framework.generics import RetrieveAPIView, ListAPIView
 from django.shortcuts import get_object_or_404
 
@@ -120,3 +120,19 @@ class UserFavoritesView(APIView):
         favorites = Favorites.objects.filter(user=user)
         serializer = FavoriteSerializer(favorites, many=True)
         return Response(serializer.data)
+    
+    
+class FoodByCategoryView(ListAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = FoodItemSerializer
+
+    def get_queryset(self):
+        category = self.kwargs['category']
+        return FoodItem.objects.filter(category__iexact=category)
+    
+
+
+class UploadFoodItemWithRecipeView(generics.CreateAPIView):
+    permission_classes = [AllowAny]
+    queryset = FoodItem.objects.all()
+    serializer_class = FoodItemCreateWithRecipeSerializer

@@ -49,3 +49,20 @@ class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorites
         fields = ['id', 'user', 'food_item', 'fav_added']
+
+
+class FoodItemCreateWithRecipeSerializer(serializers.ModelSerializer):
+    recipe = RecipeSerializer()
+
+    class Meta:
+        model = FoodItem
+        fields = [
+            'name', 'title', 'description', 'serve',
+            'image', 'category', 'recipe'
+        ]
+
+    def create(self, validated_data):
+        recipe_data = validated_data.pop('recipe')
+        food_item = FoodItem.objects.create(**validated_data)
+        Recipe.objects.create(food_item=food_item, **recipe_data)
+        return food_item

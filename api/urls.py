@@ -20,4 +20,10 @@ urlpatterns = [
     path('favorites/remove/', views.RemoveFavoriteView.as_view(), name='remove_favorite'),
     path('favorites/check/<int:user_id>/<int:food_id>/', views.IsFavoriteView.as_view(), name='is_favorite'),
     path('favorites/<int:user_id>/', views.UserFavoritesView.as_view(), name='get_favorites_by_user'),
+    
+    
+    path('foods/<str:category>/', views.FoodByCategoryView.as_view()),
+    
+    
+    path('upload-food-and-recipe/', views.UploadFoodItemWithRecipeView.as_view()),
 ]

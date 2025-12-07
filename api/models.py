@@ -26,6 +26,7 @@ class FoodItem(models.Model):
         null=True,
         validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])]
     )
+    category = models.TextField()
     
 
     def __str__(self):
