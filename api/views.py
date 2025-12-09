@@ -132,7 +132,7 @@ class FoodByCategoryView(ListAPIView):
     
 
 
-class UploadFoodItemWithRecipeView(generics.CreateAPIView):
+class UploadFoodItemView(generics.CreateAPIView):
     permission_classes = [AllowAny]
+    serializer_class = FoodItemSerializer
     queryset = FoodItem.objects.all()
-    serializer_class = FoodItemCreateWithRecipeSerializer

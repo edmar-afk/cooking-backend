@@ -25,5 +25,6 @@ urlpatterns = [
     path('foods/<str:category>/', views.FoodByCategoryView.as_view()),
     
     
-    path('upload-food-and-recipe/', views.UploadFoodItemWithRecipeView.as_view()),
+    path("upload-food/", views.UploadFoodItemView.as_view()),
+
 ]

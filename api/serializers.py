@@ -52,17 +52,25 @@ class FavoriteSerializer(serializers.ModelSerializer):
 
 
 class FoodItemCreateWithRecipeSerializer(serializers.ModelSerializer):
-    recipe = RecipeSerializer()
+    recipe = RecipeSerializer(required=False)
 
     class Meta:
         model = FoodItem
-        fields = [
-            'name', 'title', 'description', 'serve',
-            'image', 'category', 'recipe'
-        ]
+        fields = ['name', 'title', 'description', 'serve', 'image', 'category', 'recipe']
+
+    def run_validation(self, data=serializers.empty):
+        mutable = data.copy()
+        recipe_data = {
+            "recipes": data.get("recipe[recipes]"),
+            "instruction": data.get("recipe[instruction]"),
+        }
+        mutable["recipe"] = recipe_data
+        return super().run_validation(mutable)
 
     def create(self, validated_data):
-        recipe_data = validated_data.pop('recipe')
-        food_item = FoodItem.objects.create(**validated_data)
-        Recipe.objects.create(food_item=food_item, **recipe_data)
-        return food_item
+        recipe_data = validated_data.pop("recipe", None)
+        food = FoodItem.objects.create(**validated_data)
+        if recipe_data:
+            Recipe.objects.create(food_item=food, **recipe_data)
+        return food
+
