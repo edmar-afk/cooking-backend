@@ -10,6 +10,8 @@ from .models import FoodItem, Recipe, Profile, Favorites
 from .serializers import FoodItemSerializer, RecipeSerializer, ProfileSerializer, FavoriteSerializer, FoodItemCreateWithRecipeSerializer
 from rest_framework.generics import RetrieveAPIView, ListAPIView
 from django.shortcuts import get_object_or_404
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.generics import CreateAPIView
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -136,3 +138,21 @@ class UploadFoodItemView(generics.CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = FoodItemSerializer
     queryset = FoodItem.objects.all()
+
+
+class RecipeCreateView(CreateAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = RecipeSerializer
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request, food_item_id, *args, **kwargs):
+        try:
+            food_item = FoodItem.objects.get(pk=food_item_id)
+        except FoodItem.DoesNotExist:
+            return Response({'detail': 'FoodItem not found.'}, status=status.HTTP_404_NOT_FOUND)
+        data = request.data.copy()
+        data['food_item'] = food_item.id
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(food_item=food_item)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

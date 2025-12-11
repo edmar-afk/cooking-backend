@@ -26,5 +26,7 @@ urlpatterns = [
     
     
     path("upload-food/", views.UploadFoodItemView.as_view()),
+    
+    path('fooditems/<int:food_item_id>/recipes/', views.RecipeCreateView.as_view(), name='recipe-create'),
 
 ]
